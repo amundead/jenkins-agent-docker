@@ -17,6 +17,9 @@ RUN apt-get update \
     apt-get update \
     apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
+# Manually create the 'docker' group if it doesn't exist
+RUN groupadd docker
+
 # Add the Jenkins user to the Docker group so it can run Docker commands
 RUN usermod -aG docker jenkins
 

@@ -18,14 +18,16 @@ RUN apt-get update && \
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Create the docker group if it doesn't exist and add the jenkins user to it
-RUN groupadd -f docker && usermod -aG docker jenkins
+# Add Jenkins user to the docker group and grant necessary permissions
+RUN groupadd -f docker && usermod -aG docker jenkins && \
+    echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# Switch back to Jenkins user
-USER jenkins
+# Start the Docker daemon in the background
+RUN mkdir -p /var/run && touch /var/run/docker.sock
 
-# Working directory for Jenkins agent
-WORKDIR /home/jenkins/agent
+# Use tini as init system to handle PID 1 and signal forwarding
+RUN apt-get install -y tini
+ENTRYPOINT ["/usr/bin/tini", "--"]
 
-# Default entrypoint for Jenkins inbound agent
-ENTRYPOINT ["jenkins-agent"]
+# Start Docker daemon as part of the container startup
+CMD ["sh", "-c", "dockerd & jenkins-agent"]

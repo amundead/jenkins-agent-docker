@@ -1,9 +1,7 @@
 pipeline {
     agent {
-        docker {
-            label 'docker-agent-java'  // Specify the Docker cloud template label
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket to access Docker from inside the container
-        }
+             label 'docker-agent-java'       // Specify the Docker cloud label
+             args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket for Docker commands 
     }
 
     environment {

@@ -1,10 +1,8 @@
 pipeline {
     agent {
-        docker {
-            image 'docker:latest'  // Use Docker image from your Docker cloud
-            label 'cloud-agent-docker'       // Specify the Docker cloud label
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket for Docker commands
-        }
+        
+            label 'docker-agent-java'       // Specify the Docker cloud label
+            
     }
 
     environment {

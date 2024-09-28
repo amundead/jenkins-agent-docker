@@ -1,5 +1,5 @@
 # Use the official Jenkins inbound agent as the base image
-FROM jenkins/inbound-agent:latest
+FROM jenkins/agent:latest
 
 # Switch to root user to install Docker
 USER root

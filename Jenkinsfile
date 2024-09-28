@@ -1,8 +1,10 @@
 pipeline {
     agent {
-        label 'cloud-agent'  // Use the Docker template label
-
-        args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket for Docker commands 
+        docker {
+            image 'jenkins/agent:latest'  // Use Docker image from your Docker cloud
+            label 'cloud-agent'       // Specify the Docker cloud label
+            args '-v /var/run/docker.sock:/var/run/docker.sock'  // Mount Docker socket for Docker commands
+        }
     }
 
     environment {

@@ -15,7 +15,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the source code from your repository
-                git branch: 'main', url: 'https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}.git'
+                git branch: 'main', url: "https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}.git"
             }
         }
 

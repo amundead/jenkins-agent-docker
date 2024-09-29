@@ -1,6 +1,9 @@
 pipeline {
     agent {
-             label 'docker-agent-java'       // Specify the Docker cloud label 
+        docker {
+            label 'cloud-agent'
+            dockerHost 'tcp://172.26.16.55:2375'
+        }
     }
 
     environment {

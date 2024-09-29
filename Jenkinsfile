@@ -1,9 +1,6 @@
 pipeline {
     agent {
-        docker {
-            image 'jenkins/agent:latest' // The Docker image to use for the agent
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // Optional: Mount the Docker socket if needed
-        }
+        label 'docker-agent-java'  // Use the Docker template label
     }
 
     environment {

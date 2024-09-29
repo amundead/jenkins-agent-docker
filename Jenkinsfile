@@ -1,8 +1,10 @@
 pipeline {
     agent {
         docker {
-            label 'cloud-agent'
-            dockerHost 'tcp://172.26.16.55:2375'
+            image 'jenkins/agent:latest' // The Docker image to use for the agent
+            label 'docker-cloud-template' // Label for the Docker Cloud agent
+            dockerHost 'tcp://172.26.16.55:2375' // Docker host connection
+            args '-v /var/run/docker.sock:/var/run/docker.sock' // Pass Docker socket if needed
         }
     }
 

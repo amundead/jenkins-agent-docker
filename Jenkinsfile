@@ -1,7 +1,7 @@
 pipeline {
     agent {
         label 'cloud-agent'  // Use the Docker template label
-        args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+        
     }
 
     environment {

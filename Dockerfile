@@ -21,8 +21,8 @@ RUN apt-get update && apt-get install -y \
 # Create a directory for Docker data
 RUN mkdir -p /var/lib/docker
 
-# Configure Docker to run as a non-root user
-RUN groupadd docker \
+# Add jenkins user to the docker group, ensuring the group exists
+RUN groupadd -f docker \
     && usermod -aG docker jenkins
 
 # Ensure the Docker daemon starts when the container starts

@@ -9,7 +9,7 @@ pipeline {
         GITHUB_OWNER = 'amundead'  // Your GitHub username or organization
         GITHUB_REPOSITORY = 'jenkins-agent-docker'  // The repository where the package will be hosted
         IMAGE_NAME = "ghcr.io/${GITHUB_OWNER}/${GITHUB_REPOSITORY}"  // Full image name for GitHub Packages
-        TAG = 'v1.07'  // Tag for the Docker image
+        TAG = 'v1.08'  // Tag for the Docker image
     }
 
     stages {
@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Build Docker image using docker.build
-                    docker.build("${IMAGE_NAME}:${TAG}")
+                    docker.build("${IMAGE_NAME}:${TAG}", "--no-cache")
                 }
             }
         }

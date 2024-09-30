@@ -1,33 +1,38 @@
-# Use the official Jenkins inbound agent as the base image
+# Start with Jenkins agent base image
 FROM jenkins/agent:latest
 
-# Switch to root user to install Docker
+# Install dependencies for Docker
 USER root
 
-# Install Docker Engine on Debian 12 (Bookworm)
-RUN apt-get update && \
-    apt-get install -y \
-    apt-transport-https \
+RUN apt-get update && apt-get install -y \
     ca-certificates \
     curl \
-    gnupg && \
-    mkdir -p /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
-    chmod a+r /etc/apt/keyrings/docker.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-    apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    gnupg \
+    lsb-release \
+    && mkdir -m 0755 -p /etc/apt/keyrings \
+    && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+    $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Add Jenkins user to the docker group and grant necessary permissions
-RUN groupadd -f docker && usermod -aG docker jenkins && \
-    echo "jenkins ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+# Create a directory for Docker data
+RUN mkdir -p /var/lib/docker
 
-# Start the Docker daemon in the background
-RUN mkdir -p /var/run && touch /var/run/docker.sock
+# Configure Docker to run as a non-root user
+RUN groupadd docker \
+    && usermod -aG docker jenkins
 
-# Use tini as init system to handle PID 1 and signal forwarding
-RUN apt-get install -y tini
-ENTRYPOINT ["/usr/bin/tini", "--"]
+# Ensure the Docker daemon starts when the container starts
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-# Start Docker daemon as part of the container startup
-CMD ["sh", "-c", "dockerd & jenkins-agent"]
+# Set the right permissions
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Define the entrypoint for the container
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+# Switch back to jenkins user
+USER jenkins

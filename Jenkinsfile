@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     // Build Docker image using docker.build
-                    docker.build("${IMAGE_NAME}:${TAG}", "--no-cache")
+                    docker.build("${IMAGE_NAME}:${TAG}", "--no-cache .")
                 }
             }
         }

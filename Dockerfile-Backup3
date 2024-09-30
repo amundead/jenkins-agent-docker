@@ -22,4 +22,4 @@ RUN groupadd -f docker && usermod -aG docker jenkins
 USER jenkins
 
 # Use CMD to start the Docker daemon and Jenkins agent
-CMD ["sh", "-c", "dockerd & java -jar /usr/share/jenkins/agent.jar"]
+CMD ["sh", "-c", "dockerd & jenkins-agent"]

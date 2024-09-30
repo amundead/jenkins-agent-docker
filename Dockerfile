@@ -15,7 +15,7 @@ RUN apt-get update \
     $(. /etc/os-release && echo "bookworm") stable" | \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null \
     apt-get update \
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 # Add the Jenkins user to the Docker group
 RUN groupadd -f docker && usermod -aG docker jenkins
 

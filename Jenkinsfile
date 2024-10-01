@@ -47,7 +47,7 @@ pipeline {
                     docker.image("${IMAGE_NAME_GHCR}:${TAG}").tag("${IMAGE_NAME_DOCKERHUB}:${TAG}")
                     
                     // Use docker.withRegistry for secure login and push to Docker Hub
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
+                    docker.withRegistry('https://docker.io/', 'dockerhub-credentials-id') {
                         docker.image("${IMAGE_NAME_DOCKERHUB}:${TAG}").push()
                     }
                 }

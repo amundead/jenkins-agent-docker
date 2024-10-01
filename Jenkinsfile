@@ -8,7 +8,7 @@ pipeline {
         GITHUB_REPOSITORY = 'jenkins-agent-docker'  // The repository where the package will be hosted
         DOCKERHUB_REPOSITORY = 'amundead/jenkins-agent-docker'  // Docker Hub repository
         IMAGE_NAME_GHCR = "ghcr.io/${GITHUB_OWNER}/${GITHUB_REPOSITORY}"  // Full image name for GitHub Packages
-        IMAGE_NAME_DOCKERHUB = "${DOCKERHUB_REPOSITORY}"  // Full image name for Docker Hub
+        IMAGE_NAME_DOCKERHUB = "docker.io/${DOCKERHUB_REPOSITORY}"  // Full image name for Docker Hub
         TAG = 'v1.10'  // Tag for the Docker image
     }
 

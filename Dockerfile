@@ -18,8 +18,5 @@ RUN apt-get update && \
 # Add the Jenkins user to the Docker group
 RUN groupadd -f docker && usermod -aG docker jenkins
 
-# Switch back to the Jenkins user
-USER jenkins
-
 # Use CMD to start the Docker daemon and Jenkins agent
 CMD ["sh", "-c", "dockerd & java -jar /usr/share/jenkins/agent.jar"]

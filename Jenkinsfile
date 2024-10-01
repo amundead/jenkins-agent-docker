@@ -6,7 +6,7 @@ pipeline {
     environment {
         GITHUB_OWNER = 'amundead'  // Your GitHub username or organization
         GITHUB_REPOSITORY = 'jenkins-agent-docker'  // The repository where the package will be hosted
-        DOCKERHUB_REPOSITORY = 'amundead/jenkins-agent-docker'  // Docker Hub repository
+        DOCKERHUB_REPOSITORY = 'dockerhub-username/jenkins-agent-docker'  // Docker Hub repository
         IMAGE_NAME_GHCR = "ghcr.io/${GITHUB_OWNER}/${GITHUB_REPOSITORY}"  // Full image name for GitHub Packages
         IMAGE_NAME_DOCKERHUB = "docker.io/${DOCKERHUB_REPOSITORY}"  // Full image name for Docker Hub
         TAG = 'v1.10'  // Tag for the Docker image
@@ -23,7 +23,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build Docker image using docker.build
+                    // Build Docker image using docker.build with --no-cache option
                     docker.build("${IMAGE_NAME_GHCR}:${TAG}", "--no-cache .")
                 }
             }
@@ -45,7 +45,9 @@ pipeline {
                 script {
                     // Use docker.withRegistry for secure login and push to Docker Hub
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
+                        // Tag the image for Docker Hub correctly
                         docker.image("${IMAGE_NAME_GHCR}:${TAG}").tag("${IMAGE_NAME_DOCKERHUB}:${TAG}")
+                        // Push to Docker Hub
                         docker.image("${IMAGE_NAME_DOCKERHUB}:${TAG}").push()
                     }
                 }

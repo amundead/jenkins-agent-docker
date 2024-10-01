@@ -39,7 +39,7 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image to Docker Hub') {
+        stage('Tag and Push Docker Image to Docker Hub') {
             steps {
                 script {
                     // Use docker.withRegistry for secure login and push to Docker Hub

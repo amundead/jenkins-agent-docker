@@ -8,7 +8,6 @@ pipeline {
         GITHUB_REPOSITORY = 'jenkins-agent-docker'  // The repository where the package will be hosted
         DOCKERHUB_REPOSITORY = 'amundead/jenkins-agent-docker'  // Docker Hub repository
         IMAGE_NAME_GHCR = "ghcr.io/${GITHUB_OWNER}/${GITHUB_REPOSITORY}"  // Full image name for GitHub Packages
-        IMAGE_NAME_DOCKERHUB = "${DOCKERHUB_REPOSITORY}" // Full image name for Docker Hub
         TAG = 'v1.10'  // Tag for the Docker image
     }
 
@@ -45,10 +44,10 @@ pipeline {
                 script {
                     // Use docker.withRegistry for secure login and push to Docker Hub
                     docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
-                        // Tag the image for Docker Hub correctly
-                        docker.image("${IMAGE_NAME_GHCR}:${TAG}").tag("${IMAGE_NAME_DOCKERHUB}:${TAG}")
+                        // Correctly tag the image for Docker Hub
+                        docker.image("${IMAGE_NAME_GHCR}:${TAG}").tag("${DOCKERHUB_REPOSITORY}:${TAG}")
                         // Push to Docker Hub
-                        docker.image("${IMAGE_NAME_DOCKERHUB}:${TAG}").push()
+                        docker.image("${DOCKERHUB_REPOSITORY}:${TAG}").push()
                     }
                 }
             }
@@ -59,7 +58,7 @@ pipeline {
                 script {
                     // Remove unused Docker images to free up space
                     sh "docker rmi ${IMAGE_NAME_GHCR}:${TAG}"
-                    sh "docker rmi ${IMAGE_NAME_DOCKERHUB}:${TAG}"
+                    sh "docker rmi ${DOCKERHUB_REPOSITORY}:${TAG}"
                 }
             }
         }

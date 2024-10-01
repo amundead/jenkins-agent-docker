@@ -29,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image to GitHub Packages') {
+        stage('Tag and Push Docker Image to GitHub Packages') {
             steps {
                 script {
                     // Use docker.withRegistry for secure login and push to GitHub Packages
@@ -43,11 +43,11 @@ pipeline {
         stage('Tag and Push Docker Image to Docker Hub') {
             steps {
                 script {
-                    // Tag the image for Docker Hub (don't mix the registry URL)
-                    docker.image("${IMAGE_NAME_GHCR}:${TAG}").tag("${IMAGE_NAME_DOCKERHUB}:${TAG}")
-                    
+                    // Use shell to manually tag the image for Docker Hub
+                    sh "docker tag ${IMAGE_NAME_GHCR}:${TAG} ${IMAGE_NAME_DOCKERHUB}:${TAG}"
+
                     // Use docker.withRegistry for secure login and push to Docker Hub
-                    docker.withRegistry('https://docker.io/', 'dockerhub-credentials-id') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
                         docker.image("${IMAGE_NAME_DOCKERHUB}:${TAG}").push()
                     }
                 }

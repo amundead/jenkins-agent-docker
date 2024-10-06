@@ -1,5 +1,5 @@
-# Use the official Jenkins inbound agent image as the base
-FROM jenkins/inbound-agent:latest
+# Use the official Jenkins agent image as the base image
+FROM jenkins/agent:latest
 
 USER root
 
@@ -19,6 +19,3 @@ RUN apt-get update && \
 
 # Switch back to the Jenkins user
 USER jenkins
-
-# Run Jenkins agent entrypoint
-ENTRYPOINT ["/usr/bin/jenkins-agent"]

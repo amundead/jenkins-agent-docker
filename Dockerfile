@@ -1,22 +1,22 @@
-# Use the official Jenkins agent image as the base image
+# Base image for Jenkins agent
 FROM jenkins/agent:latest
 
+# Install Docker CLI and dependencies
 USER root
-
-# Install Docker CLI on Debian Bookworm (Debian 12)
-RUN apt-get update && \
-    apt-get install -y \
+RUN apt-get update && apt-get install -y \
+    apt-transport-https \
     ca-certificates \
     curl \
     gnupg \
     lsb-release && \
-    # Add Docker's official GPG key and repository for Debian 12 (Bookworm)
-    install -m 0755 -d /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | tee /etc/apt/keyrings/docker.gpg > /dev/null && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-    apt-get update && \
-    apt-get install -y docker-ce-cli && \
-    rm -rf /var/lib/apt/lists/
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && apt-get install -y docker-ce-cli && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Switch back to the Jenkins user
+# Switch back to Jenkins agent user
 USER jenkins
+
+# Start the Jenkins agent
+ENTRYPOINT ["jenkins-agent"]

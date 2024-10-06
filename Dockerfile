@@ -15,8 +15,5 @@ RUN apt-get update && apt-get install -y \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Switch back to Jenkins agent user
-USER jenkins
-
 # Start the Jenkins agent using the agent.jar
-ENTRYPOINT ["java", "-jar", "/usr/share/jenkins/agent.jar"]
+CMD ["java", "-jar", "/usr/share/jenkins/agent.jar"]

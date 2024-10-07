@@ -14,10 +14,9 @@ RUN apt-get update && apt-get install -y \
     apt-get update && apt-get install -y docker-ce-cli
 
 # Install kubectl for Debian Bookworm 12
-RUN curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | tee /etc/apt/sources.list.d/kubernetes.list && \
-    apt-get update && \
-    apt-get install -y kubectl || { echo "Failed to install kubectl"; cat /var/log/apt/term.log; exit 1; } && \
+RUN curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/kubernetes-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-debian-$(lsb_release -cs) main" | tee /etc/apt/sources.list.d/kubernetes.list && \
+    apt-get update && apt-get install -y kubectl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

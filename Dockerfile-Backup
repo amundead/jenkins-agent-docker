@@ -1,22 +1,19 @@
-# Start from the Jenkins agent base image
+# Base image for Jenkins agent
 FROM jenkins/agent:latest
 
-# Switch to root user to install Docker
+# Install Docker CLI and dependencies
 USER root
+RUN apt-get update && apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && apt-get install -y docker-ce-cli && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install Docker engine on Debian Bookworm 12
-RUN apt-get update && \
-    apt-get install -y ca-certificates curl gnupg && \
-    install -m 0755 -d /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc && \
-    chmod a+r /etc/apt/keyrings/docker.asc && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-    $(. /etc/os-release && echo bookworm) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-    apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-# Add the Jenkins user to the Docker group
-RUN groupadd -f docker && usermod -aG docker jenkins
-
-# Use CMD to start the Docker daemon and Jenkins agent
-CMD ["sh", "-c", "dockerd & java -jar /usr/share/jenkins/agent.jar"]
+# Start the Jenkins agent using the agent.jar
+CMD ["java", "-jar", "/usr/share/jenkins/agent.jar"]

@@ -1,1 +1,1 @@
-This docker image contain Jenkins agent with docker dan Kubectl CLI installation.
+This docker image contain Jenkins agent with Docker dan Kubectl CLI installation.

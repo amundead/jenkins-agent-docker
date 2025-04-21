@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'docker-cloud-agent'  // Use the Docker template label
+        label 'docker-cloud-LTS'  // Use the Docker template label
     }
 
     environment {

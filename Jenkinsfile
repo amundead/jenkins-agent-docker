@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'docker-cloud-LTS'  // Use the Docker template label
+        label 'jenkins-linux-agent-TLS'  // Use the Docker template label
     }
 
     environment {

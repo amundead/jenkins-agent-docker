@@ -9,14 +9,14 @@ pipeline {
         DOCKERHUB_REPOSITORY = 'amundead/jenkins-agent-docker'  // Docker Hub repository
         IMAGE_NAME_GHCR = "ghcr.io/${GITHUB_OWNER}/${GITHUB_REPOSITORY}"  // Full image name for GitHub Packages
         IMAGE_NAME_DOCKERHUB = "${DOCKERHUB_REPOSITORY}"  // Full image name for Docker Hub
-        TAG = 'v1.15'  // Tag for the Docker image
+        TAG = 'latest'  // Tag for the Docker image
     }
 
     stages {
         stage('Checkout') {
             steps {
                 // Checkout the source code from your repository using credentials securely
-                git branch: 'main', url: "https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}.git", credentialsId: 'github-credentials-id'
+                git branch: 'main', url: "https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}.git", credentialsId: 'github-credentials-amir'
             }
         }
 

@@ -16,7 +16,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the source code from your repository using credentials securely
-                git branch: 'main', url: "https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}.git", credentialsId: 'github-credentials-amir'
+                git branch: 'main', url: "https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}.git"
             }
         }
 
@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                     // Use docker.withRegistry for secure login and push to GitHub Packages
-                    docker.withRegistry('https://ghcr.io', 'github-credentials-id') {
+                    docker.withRegistry('https://ghcr.io', 'github-credentials-amir') {
                         docker.image("${IMAGE_NAME_GHCR}:${TAG}").push()
                     }
                 }
